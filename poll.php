@@ -8,6 +8,8 @@ require_once(__DIR__ . '/../../config.php');
 
 require_login();
 
+confirm_sesskey();
+
 $courseid = required_param('courseid', PARAM_INT);
 $instanceid = required_param('instanceid', PARAM_INT);
 
@@ -30,9 +32,6 @@ if (empty($polls->questions)) {
 }
 
 echo $OUTPUT->header();
-
-echo \html_writer::link(new \moodle_url("index.php", ["courseid" => $courseid]), "トップ画面へ戻る", ["class" => "btn btn-success"]);
-echo \html_writer::empty_tag("hr");
 
 if (array_key_exists("score_answers", $_POST)) {
     // update answer score
@@ -122,7 +121,20 @@ foreach ($questions_m->polls as $p_id => $p) {
     echo \html_writer::table($table);
 }
 
-echo \html_writer::empty_tag("input", ["type" => "submit", "value" => "保存する", "class" => "btn btn-standard"]);
+echo \html_writer::empty_tag("input", ["type" => "hidden", "name" => "sesskey", "value" => sesskey()]);
+
+echo \html_writer::start_div("col-12 clearfix");
+
+echo \html_writer::start_div("float-left");
+echo \html_writer::link(new \moodle_url("index.php", ["courseid" => $courseid]), "トップ画面へ戻る", ["class" => "btn btn-primary"]);
+echo \html_writer::end_div();
+
+echo \html_writer::start_div("float-right");
+echo \html_writer::empty_tag("input", ["type" => "submit", "value" => "保存する", "class" => "btn btn-success"]);
+echo \html_writer::end_div();
+
+echo \html_writer::end_div();
+
 echo \html_writer::end_tag("form");
 echo \html_writer::empty_tag("hr");
 

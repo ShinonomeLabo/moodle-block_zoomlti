@@ -10,6 +10,8 @@ require_once(__DIR__ . '/../../config.php');
 
 require_login();
 
+confirm_sesskey();
+
 $instanceid = required_param('instanceid', PARAM_INT);
 
 $instance = $DB->get_record("zoom", ["id" => $instanceid]);

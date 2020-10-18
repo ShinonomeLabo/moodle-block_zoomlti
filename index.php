@@ -22,14 +22,14 @@ echo $OUTPUT->header();
 $modules = get_coursemodules_in_course('zoom', $courseid);
 
 $table = new \html_table();
-$table->head = ["ID", "モジュール名", "ログをエクスポート", "投票結果を集計", "評点を更新"];
+$table->head = ["ID", "モジュール名", "ログをエクスポート", "投票結果を集計", "評点"];
 foreach($modules as $module){
     $table->data[] = [
         $module->id,
         $module->name,
-        \html_writer::link(new \moodle_url("logging_to.php", ["instanceid" => $module->instance]), "履歴をエクスポートする", ["class" => "btn btn-primary"]),
-        \html_writer::link(new \moodle_url("poll.php", ["instanceid" => $module->instance, "courseid" => $courseid]), "投票結果を集計する", ["class" => "btn btn-primary"]),
-        \html_writer::link(new \moodle_url("update_grade.php", ["instanceid" => $module->instance, "courseid" => $courseid]), "評点を更新する", ["class" => "btn btn-primary"]),
+        \html_writer::link(new \moodle_url("logging_to.php", ["instanceid" => $module->instance, "sesskey" => sesskey()]), "履歴をエクスポートする", ["class" => "btn btn-primary"]),
+        \html_writer::link(new \moodle_url("poll.php", ["instanceid" => $module->instance, "courseid" => $courseid, "sesskey" => sesskey()]), "投票に点数を設定する", ["class" => "btn btn-primary"]),
+        \html_writer::link(new \moodle_url("update_grade.php", ["instanceid" => $module->instance, "courseid" => $courseid, "sesskey" => sesskey()]), "評点を計算・反映する", ["class" => "btn btn-primary"]),
     ];
 }
 

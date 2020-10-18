@@ -29,11 +29,11 @@ $zoom = $DB->get_record('zoom', ['id' => $instanceid], '*', MUST_EXIST);
 $sql = "select * from {zoom} z join {zoom_meeting_details} d on z.id = d.zoomid where z.id = :instanceid";
 $instance = $DB->get_record_sql($sql, ["instanceid" => $instanceid]);
 
-//block_zoomlti_polls
-$poll_answers = $DB->get_records('block_zoomlti_polls', ['zoomid' => $instanceid, "question_sequence" => 0]);
-$service = new zoomlti_dao();
+$sql = "select * from {zoom} z join {zoom_meeting_details} d on d.zoomid = z.id join {zoom_meeting_participants} p on p.detailsid = d.id where d.zoomid = :instanceid";
+$participants = $DB->get_records_sql($sql, ["instanceid" => $instanceid]);
 
-$users = enrol_get_course_users_roles($courseid);
+
+$service = new zoomlti_dao();
 $polls = $service->get_polls($instance->meeting_id);
 foreach ($polls->questions as $questions) {
     $user = \core_user::get_user_by_email($questions->email);
@@ -68,7 +68,44 @@ foreach ($polls->questions as $questions) {
         $grade->rawgrade = $u_score;
 
         grade_update('mod/zoom', $courseid, 'mod', 'zoom', $instanceid, $seq, $grade, $item);
+
+        $user = \core_user::get_user($user->id);
+        $course = $DB->get_record("course", ["id" => $courseid]);
+
+        $event = event\zoomlti_meeting_polled::create([
+            'userid' => $user->id,
+            'objectid' => $instanceid,
+            'context' => $context,
+            'other' => [
+                'topic' => $d->question,
+                'source' => "moodle",
+                'courseid' => $courseid,
+                'username' => !$user ? null : $user->username,
+                'moodleuserid' => !$user ? null : $user->id,
+                'question_title' => $d->question,
+                'question_answer' => $d->answer
+            ]
+        ]);
+
+        $event->add_record_snapshot('course', $course);
+        $event->add_record_snapshot("zoom", $instance);
+        $event->trigger();
+
     }
+}
+
+foreach ($participants as $participant) {
+    $item = [];
+    $item['itemname'] = "出席($instance->name)";
+    $item['gradetype'] = GRADE_TYPE_VALUE;
+
+    $grade = grade_get_grades($zoom->course, 'mod', 'zoom', $participant->zoomid, $participant->userid);
+    $grade->userid = $participant->userid;
+    $grade->rawgrade = 10;
+    $grade->feedback = "出席";
+    $grade->feedbackformat = FORMAT_PLAIN;
+
+    grade_update('mod/zoom', $courseid, 'mod', 'zoom', $participant->zoomid, $participant->zoomid, $grade, $item);
 }
 
 redirect(new \moodle_url('index.php', ["courseid" => $courseid]), "成績の集計が完了しました。");
