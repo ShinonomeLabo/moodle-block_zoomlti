@@ -23,6 +23,17 @@ class zoomlti_dao extends \mod_zoom_webservice
         return $response;
     }
 
+    public function get_poll_questions($meeting_id) {
+        $url = "meetings/$meeting_id/polls";
+
+        try {
+            $response = $this->_make_call($url);
+        } catch (\moodle_exception $error) {
+            throw $error;
+        }
+        return $response;
+    }
+
     public function get_poll_details($meeting_id, $poll_id) {
         $url = "past_meetings/$meeting_id/polls/$poll_id";
 
@@ -34,4 +45,14 @@ class zoomlti_dao extends \mod_zoom_webservice
         return $response;
     }
 
+    public function get_participants($meeting_uuid) {
+        $url = "past_meetings/$meeting_uuid/participants/";
+
+        try {
+            $response = $this->_make_call($url);
+        } catch (\moodle_exception $error) {
+            throw $error;
+        }
+        return $response;
+    }
 }

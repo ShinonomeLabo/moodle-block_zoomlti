@@ -33,7 +33,7 @@ class zoomlti_meeting_finished extends base {
         $this->data['objecttable'] = 'zoom';
         $this->data['crud'] = 'c';
         $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
-        $this->data['userid'] = "";
+        $this->data['userid'] = $this->other['moodleuserid'];
     }
 
     /**

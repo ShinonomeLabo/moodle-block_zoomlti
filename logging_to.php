@@ -34,6 +34,7 @@ foreach ($zoom_meeting_participants as $participant) {
     $course = $DB->get_record("course", ["id" => $participant->course]);
 
     $event = event\zoomlti_meeting_finished::create([
+        'userid' => $userid,
         'objectid' => $instanceid,
         'context' => $context,
         'other' => [
