@@ -26,8 +26,6 @@ $PAGE->set_heading("評点更新");
 
 $zoom = $DB->get_record('zoom', ['id' => $instanceid], '*', MUST_EXIST);
 
-echo $OUTPUT->header();
-
 $sql = "select * from {zoom} z join {zoom_meeting_details} d on z.id = d.zoomid where z.id = :instanceid";
 $instance = $DB->get_record_sql($sql, ["instanceid" => $instanceid]);
 
@@ -73,4 +71,4 @@ foreach ($polls->questions as $questions) {
     }
 }
 
-echo $OUTPUT->footer();
+redirect(new \moodle_url('index.php', ["courseid" => $courseid]), "成績の集計が完了しました。");
