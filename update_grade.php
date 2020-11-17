@@ -83,7 +83,8 @@ foreach ($polls->questions as $questions) {
                 'username' => !$user ? null : $user->username,
                 'moodleuserid' => !$user ? null : $user->id,
                 'question_title' => $d->question,
-                'question_answer' => $d->answer
+                'question_answer' => $d->answer,
+                'meeting_id' => $instance->meeting_id
             ]
         ]);
 

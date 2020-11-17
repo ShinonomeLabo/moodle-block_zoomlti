@@ -56,7 +56,7 @@ class block_zoomlti extends block_base {
 
         $html = html_writer::link(
             new moodle_url($CFG->wwwroot . '/blocks/zoomlti/index.php', ["courseid" => $courseid]),
-            'Zoomログをエクスポート',
+            '出席情報をエクスポート',
             ['class' => 'btn btn-primary', 'target' => '_blank']
         );
         return $this->content = (object)['text' => $html];
