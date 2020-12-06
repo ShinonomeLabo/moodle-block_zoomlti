@@ -36,13 +36,16 @@ $participants = $DB->get_records_sql($sql, ["instanceid" => $instanceid]);
 $service = new zoomlti_dao();
 $polls = $service->get_polls($instance->meeting_id);
 
+//var_dump($polls);
+
 foreach ($participants as $participant) {
     foreach ($polls->questions as $questions) {
         $user = \core_user::get_user($participant->userid);
         if (!$user) {
             continue;
         }
-        $questions->question_details = array_reverse($questions->question_details);
+
+//        $questions->question_details = array_reverse($questions->question_details);
         foreach ($questions->question_details as $seq => $d) {
             $score_passed = $DB->get_record("block_zoomlti_score_passed", ["zoomid" => $instanceid, "question_sequence" => $seq]);
 
@@ -55,12 +58,14 @@ foreach ($participants as $participant) {
             $item['gradepass'] = $score_passed->score_passed;
 
             $scores = $DB->get_records("block_zoomlti_polls", ["zoomid" => $instanceid, "question_sequence" => $seq]);
+
             $score_m = [];
             foreach ($scores as $score) {
                 $score_m[$score->answer] = $score->score;
             }
 
             $user_answers = explode(";", $d->answer);
+
             $u_score = 0;
             foreach ($user_answers as $ua) {
                 $u_score += $score_m[$ua];
@@ -98,6 +103,11 @@ foreach ($participants as $participant) {
 }
 
 foreach ($participants as $participant) {
+    $user = \core_user::get_user($participant->userid);
+    if (!$user) {
+        continue;
+    }
+
     $item = [];
     $item['itemname'] = "出席($instance->name)";
     $item['gradetype'] = GRADE_TYPE_VALUE;
