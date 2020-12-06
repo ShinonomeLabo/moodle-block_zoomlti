@@ -121,4 +121,4 @@ foreach ($participants as $participant) {
     grade_update('mod/zoom', $courseid, 'mod', 'zoom', $participant->zoomid, $participant->zoomid, $grade, $item);
 }
 
-//redirect(new \moodle_url('index.php', ["courseid" => $courseid]), "成績の集計が完了しました。");
+redirect(new \moodle_url('index.php', ["courseid" => $courseid]), "成績の集計が完了しました。");
