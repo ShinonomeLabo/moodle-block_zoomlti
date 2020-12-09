@@ -17,12 +17,14 @@ require_login();
 $courseid = required_param('courseid', PARAM_INT);
 $instanceid = required_param('instanceid', PARAM_INT);
 
-$context = \context_system::instance();
+$context = \context_course::instance($courseid);
 
 $PAGE->set_url($CFG->wwwroot . '/blocks/zoomlti/update_grade.php');
 $PAGE->set_context($context);
 $PAGE->set_title("評点更新");
 $PAGE->set_heading("評点更新");
+
+$cm = get_coursemodule_from_instance('zoom', $instanceid, $courseid);
 
 $zoom = $DB->get_record('zoom', ['id' => $instanceid], '*', MUST_EXIST);
 
@@ -35,8 +37,6 @@ $participants = $DB->get_records_sql($sql, ["instanceid" => $instanceid]);
 
 $service = new zoomlti_dao();
 $polls = $service->get_polls($instance->meeting_id);
-
-//var_dump($polls);
 
 foreach ($participants as $participant) {
     foreach ($polls->questions as $questions) {
@@ -83,6 +83,7 @@ foreach ($participants as $participant) {
                 'userid' => $user->id,
                 'objectid' => $instanceid,
                 'context' => $context,
+                'coursemodule' => $cm,
                 'other' => [
                     'topic' => $d->question,
                     'source' => "moodle",

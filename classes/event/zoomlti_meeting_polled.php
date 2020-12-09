@@ -31,6 +31,7 @@ class zoomlti_meeting_polled extends base {
 
     protected function init() {
         $this->data['objecttable'] = 'zoomlti';
+        $this->data['context'] = \context_module::instance($this->objectid);
         $this->data['crud'] = 'c';
         $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
         $this->data['userid'] = $this->other['moodleuserid'];
