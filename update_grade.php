@@ -91,7 +91,8 @@ foreach ($participants as $participant) {
                     'moodleuserid' => !$user ? null : $user->id,
                     'question_title' => $d->question,
                     'question_answer' => $d->answer,
-                    'meeting_id' => $instance->meeting_id
+                    'meeting_id' => $instance->meeting_id,
+                    'grade' => $grade
                 ]
             ]);
 

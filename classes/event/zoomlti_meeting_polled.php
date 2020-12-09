@@ -30,10 +30,12 @@ defined('MOODLE_INTERNAL') || die();
 class zoomlti_meeting_polled extends base {
 
     protected function init() {
-        $this->data['objecttable'] = 'zoom';
+        $this->data['objecttable'] = 'zoomlti';
         $this->data['crud'] = 'c';
         $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
         $this->data['userid'] = $this->other['moodleuserid'];
+        $this->data['courseid'] = $this->other['courseid'];
+        $this->data['grade'] = $this->other['grade'];
     }
 
     /**
