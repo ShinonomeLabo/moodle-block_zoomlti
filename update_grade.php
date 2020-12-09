@@ -24,8 +24,6 @@ $PAGE->set_context($context);
 $PAGE->set_title("評点更新");
 $PAGE->set_heading("評点更新");
 
-$cm = get_coursemodule_from_instance('zoom', $instanceid, $courseid);
-
 $zoom = $DB->get_record('zoom', ['id' => $instanceid], '*', MUST_EXIST);
 
 $sql = "select * from {zoom} z join {zoom_meeting_details} d on z.id = d.zoomid where z.id = :instanceid";
@@ -33,7 +31,6 @@ $instance = $DB->get_record_sql($sql, ["instanceid" => $instanceid]);
 
 $sql = "select * from {zoom} z join {zoom_meeting_details} d on d.zoomid = z.id join {zoom_meeting_participants} p on p.detailsid = d.id where d.zoomid = :instanceid";
 $participants = $DB->get_records_sql($sql, ["instanceid" => $instanceid]);
-
 
 $service = new zoomlti_dao();
 $polls = $service->get_polls($instance->meeting_id);
@@ -83,7 +80,6 @@ foreach ($participants as $participant) {
                 'userid' => $user->id,
                 'objectid' => $instanceid,
                 'context' => $context,
-                'coursemodule' => $cm,
                 'other' => [
                     'topic' => $d->question,
                     'source' => "moodle",
@@ -93,7 +89,7 @@ foreach ($participants as $participant) {
                     'question_title' => $d->question,
                     'question_answer' => $d->answer,
                     'meeting_id' => $instance->meeting_id,
-                    'grade' => $grade
+                    'grade' => $grade->rawgrade
                 ]
             ]);
 
