@@ -16,7 +16,7 @@ $instanceid = required_param('instanceid', PARAM_INT);
 
 $instance = $DB->get_record("zoom", ["id" => $instanceid]);
 
-$sql = "select p.id participantsid, z.course, d.id detailsid, d.meeting_id, d.end_time, d.topic topic, p.join_time, p.leave_time, p.userid userid, d.zoomid zoomid from {zoom_meeting_details} d join {zoom_meeting_participants} p on d.id = p.detailsid join {zoom} z on z.id = zoomid where zoomid = :zoomid";
+$sql = "select p.id participantsid, z.course, d.id detailsid, d.meeting_id, d.end_time, d.topic topic, p.join_time, p.leave_time, p.userid userid, d.zoomid zoomid, p.leave_time, p.duration, MAX(p.duration) from {zoom_meeting_details} d join {zoom_meeting_participants} p on d.id = p.detailsid join {zoom} z on z.id = zoomid where zoomid = :zoomid group by p.userid";
 
 $zoom_meeting_participants = $DB->get_records_sql($sql, ["zoomid" => $instanceid]);
 

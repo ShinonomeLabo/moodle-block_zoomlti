@@ -29,8 +29,8 @@ $zoom = $DB->get_record('zoom', ['id' => $instanceid], '*', MUST_EXIST);
 $sql = "select * from {zoom} z join {zoom_meeting_details} d on z.id = d.zoomid where z.id = :instanceid";
 $instance = $DB->get_record_sql($sql, ["instanceid" => $instanceid]);
 
-$sql = "select * from {zoom} z join {zoom_meeting_details} d on d.zoomid = z.id join {zoom_meeting_participants} p on p.detailsid = d.id where d.zoomid = :instanceid";
-$participants = $DB->get_records_sql($sql, ["instanceid" => $instanceid]);
+$sql = "select p.id participantsid, z.course, d.id detailsid, d.meeting_id, d.end_time, d.topic topic, p.join_time, p.leave_time, p.userid userid, d.zoomid zoomid, p.leave_time, p.duration, MAX(p.duration) from {zoom_meeting_details} d join {zoom_meeting_participants} p on d.id = p.detailsid join {zoom} z on z.id = zoomid where zoomid = :zoomid group by p.userid";
+$participants = $DB->get_records_sql($sql, ["zoomid" => $instanceid]);
 
 $service = new zoomlti_dao();
 $polls = $service->get_polls($instance->meeting_id);

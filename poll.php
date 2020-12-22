@@ -141,9 +141,8 @@ echo \html_writer::empty_tag("hr");
 echo \html_writer::tag("h2", "投票に対する回答一覧");
 
 $table = new \html_table();
-
+$table->head = ["質問", "回答者", "回答者のメールアドレス", "回答"];
 foreach ($polls->questions as $questions) {
-    $table->head = ["質問", "回答者", "回答者のメールアドレス", "回答"];
     foreach ($questions->question_details as $details) {
         $table->data[] = [
             $details->question,
@@ -152,7 +151,7 @@ foreach ($polls->questions as $questions) {
             $details->answer,
         ];
     }
-    echo \html_writer::table($table);
 }
+echo \html_writer::table($table);
 
 echo $OUTPUT->footer();
