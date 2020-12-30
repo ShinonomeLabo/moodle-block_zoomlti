@@ -38,13 +38,12 @@ $service = new zoomlti_dao();
 $polls = $service->get_polls($instance->meeting_id);
 
 foreach ($participants as $participant) {
+    $user = \core_user::get_user($participant->userid);
     foreach ($polls->questions as $questions) {
-        $user = \core_user::get_user($participant->userid);
-        if (!$user) {
+        if (!$user || strcmp($questions->name, fullname($user)) != 0) {
             continue;
         }
 
-//        $questions->question_details = array_reverse($questions->question_details);
         foreach ($questions->question_details as $seq => $d) {
             $score_passed = $DB->get_record("block_zoomlti_score_passed", ["zoomid" => $instanceid, "question_sequence" => $seq]);
 

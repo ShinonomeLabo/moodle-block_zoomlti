@@ -34,7 +34,7 @@ function zoomlti_meeting_polled(array $config, \stdClass $event)
         'verb' => [
             'id' => 'http://id.tincanapi.com/verb/viewed',
             'display' => [
-                $lang => 'viewed'
+                $lang => 'polled'
             ],
         ],
         'object' => utils\get_activity\course_module(
@@ -52,7 +52,6 @@ function zoomlti_meeting_polled(array $config, \stdClass $event)
                 'http://learninglocker.net/xapi/cmi/zoomlti/topic' => $event_other['topic'],
                 'http://learninglocker.net/xapi/cmi/zoomlti/question_title' => $event_other['question_title'],
                 'http://learninglocker.net/xapi/cmi/zoomlti/question_answer' => $event_other['question_answer'],
-                'http://learninglocker.net/xapi/cmi/zoomlti/grade' => $event_other['grade'],
             ],
         ],
 

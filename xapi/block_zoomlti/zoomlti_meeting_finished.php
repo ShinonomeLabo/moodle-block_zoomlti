@@ -36,7 +36,7 @@ function zoomlti_meeting_finished(array $config, \stdClass $event)
         'verb' => [
             'id' => 'http://id.tincanapi.com/verb/viewed',
             'display' => [
-                $lang => 'viewed'
+                $lang => 'participated'
             ],
         ],
         'object' => utils\get_activity\course_module(
