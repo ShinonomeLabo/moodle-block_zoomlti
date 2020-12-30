@@ -23,13 +23,14 @@ $modules = get_coursemodules_in_course('zoom', $courseid);
 
 $table = new \html_table();
 $table->head = ["ID", "モジュール名", "ログをエクスポート", "投票結果を集計", "評点"];
-foreach($modules as $module){
+foreach ($modules as $module) {
+    $cm = get_coursemodule_from_id("zoom", $module->id);
     $table->data[] = [
         $module->id,
         $module->name,
-        \html_writer::link(new \moodle_url("logging_to.php", ["instanceid" => $module->instance, "sesskey" => sesskey()]), "出席情報をエクスポート", ["class" => "btn btn-primary"]),
-        \html_writer::link(new \moodle_url("poll.php", ["instanceid" => $module->instance, "courseid" => $courseid, "sesskey" => sesskey()]), "投票結果の点数設定", ["class" => "btn btn-primary"]),
-        \html_writer::link(new \moodle_url("update_grade.php", ["instanceid" => $module->instance, "courseid" => $courseid, "sesskey" => sesskey()]), "評定表の更新/投票結果をエクスポート", ["class" => "btn btn-primary"]),
+        \html_writer::link(new \moodle_url("logging_to.php", ["instanceid" => $cm->instance, "sesskey" => sesskey()]), "出席情報をエクスポート", ["class" => "btn btn-primary"]),
+        \html_writer::link(new \moodle_url("poll.php", ["instanceid" => $cm->instance, "courseid" => $courseid, "sesskey" => sesskey()]), "投票結果の点数設定", ["class" => "btn btn-primary"]),
+        \html_writer::link(new \moodle_url("update_grade.php", ["instanceid" => $cm->instance, "courseid" => $courseid, "sesskey" => sesskey()]), "評定表の更新/投票結果をエクスポート", ["class" => "btn btn-primary"]),
     ];
 }
 

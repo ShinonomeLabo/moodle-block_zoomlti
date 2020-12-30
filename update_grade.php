@@ -18,9 +18,11 @@ $courseid = required_param('courseid', PARAM_INT);
 $instanceid = required_param('instanceid', PARAM_INT);
 
 $context = \context_course::instance($courseid);
+$cm = get_coursemodule_from_instance("zoom", $instanceid);
+$context_module = \context_module::instance($cm->id);
 
 $PAGE->set_url($CFG->wwwroot . '/blocks/zoomlti/update_grade.php');
-$PAGE->set_context($context);
+$PAGE->set_context($context_module);
 $PAGE->set_title("評点更新");
 $PAGE->set_heading("評点更新");
 
@@ -67,11 +69,12 @@ foreach ($participants as $participant) {
             foreach ($user_answers as $ua) {
                 $u_score += $score_m[$ua];
             }
+
             $grade = grade_get_grades($zoom->course, 'mod', 'zoom', $zoom->id, $user->id);
             $grade->userid = $user->id;
             $grade->rawgrade = $u_score;
 
-            grade_update('mod/zoom', $courseid, 'mod', 'zoom', $instanceid, $seq, $grade, $item);
+            $grade_status = grade_update('mod/zoom', $courseid, 'mod', 'zoom', $instanceid, $seq, $grade, $item);
 
             $user = \core_user::get_user($user->id);
             $course = $DB->get_record("course", ["id" => $courseid]);
@@ -79,7 +82,7 @@ foreach ($participants as $participant) {
             $event = event\zoomlti_meeting_polled::create([
                 'userid' => $user->id,
                 'objectid' => $instanceid,
-                'context' => $context,
+                'context' => $context_module,
                 'other' => [
                     'topic' => $d->question,
                     'source' => "moodle",

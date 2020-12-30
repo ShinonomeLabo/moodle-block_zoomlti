@@ -21,6 +21,7 @@ $sql = "select p.id participantsid, z.course, d.id detailsid, d.meeting_id, d.en
 $zoom_meeting_participants = $DB->get_records_sql($sql, ["zoomid" => $instanceid]);
 
 $cm = get_coursemodule_from_instance("zoom", $instanceid);
+
 $context = \context_module::instance($cm->id);
 
 foreach ($zoom_meeting_participants as $participant) {
